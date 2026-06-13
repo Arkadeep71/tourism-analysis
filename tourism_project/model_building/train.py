@@ -82,17 +82,20 @@ preprocessor = make_column_transformer(
     (OneHotEncoder(handle_unknown='ignore'), categorical_features)
 )
 
-# Define base XGBoost Regressor
-xgb_model = xgb.XGBRegressor(random_state=42, n_jobs=-1)
-
-# Hyperparameter grid
+scale_pos_weight = 3331 / 797  # ≈ 4.18
+xgb_model = xgb.XGBClassifier(
+    random_state=42,
+    n_jobs=-1,
+    eval_metric='logloss',
+    scale_pos_weight=scale_pos_weight
+)
 param_grid = {
-    'xgbregressor__n_estimators': [50, 100],
-    'xgbregressor__max_depth': [3, 5],
-    'xgbregressor__learning_rate': [0.01, 0.05],
-    'xgbregressor__subsample': [0.7, 0.8],
-    'xgbregressor__colsample_bytree': [0.7, 0.8],
-    'xgbregressor__reg_lambda': [0.1, 1]
+    'xgbclassifier__n_estimators': [50, 100],
+    'xgbclassifier__max_depth': [3, 5],
+    'xgbclassifier__learning_rate': [0.01, 0.05],
+    'xgbclassifier__subsample': [0.7, 0.8],
+    'xgbclassifier__colsample_bytree': [0.7, 0.8],
+    'xgbclassifier__reg_lambda': [0.1, 1]
 }
 
 # Pipeline
